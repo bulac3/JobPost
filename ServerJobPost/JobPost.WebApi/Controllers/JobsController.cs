@@ -1,7 +1,6 @@
 ﻿using JobPost.BL.DALInterfaces.Finders;
 using JobPost.BL.Models;
 using JobPost.BL.Services;
-using JobPost.DAL.MsSql.Finders;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -27,5 +26,18 @@ namespace JobPost.WebApi.Controllers
 
         [HttpGet]
         public ActionResult<IEnumerable<Job>> GetAll() => Ok(_jobFinder.FindBy(x => true).AsEnumerable());
+
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody]Job model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _jobService.Add(model);
+
+            return Ok();
+        }
     }
 }
