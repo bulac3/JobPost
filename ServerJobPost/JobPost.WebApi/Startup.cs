@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JobPost.BL.DALInterfaces;
+using JobPost.BL.DALInterfaces.Finders;
+using JobPost.BL.Services;
 using JobPost.DAL.MsSql;
+using JobPost.DAL.MsSql.Finders;
+using JobPost.DAL.MsSql.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +35,11 @@ namespace JobPost.WebApi
             services.AddDbContext<JobPostContext>(opt =>
                 opt.UseSqlServer(Configuration["ConnectionStrings:Default"], b => b.MigrationsAssembly("JobPost.DAL.MsSql")));
 
+            // dependency injection
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IJobRepository, JobRepository>();
+            services.AddScoped<IJobFinder, JobFinder>();
+            services.AddScoped<JobService, JobService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
